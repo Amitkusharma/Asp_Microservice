@@ -47,7 +47,7 @@ namespace BuyerBidService.Api.Controllers
                 var bidinfo = _repository.GetbidDtl(_bid.ProductId, _bid.Email);
                 if (bidinfo == null)
                 {
-                    if (productinfo != null && productinfo.BidEndDT.Value.Date <= DateTime.Now.Date)
+                    if (productinfo != null && productinfo.BidEndDT.Value.Date >= DateTime.Now.Date)
                     {
 
                         _repository.AddBids(_bid);
@@ -81,7 +81,7 @@ namespace BuyerBidService.Api.Controllers
             try
             {
                 var productinfo = _repository.GetProductDtl(_ProductId);
-                if (productinfo != null && productinfo.BidEndDT.Value.Date <= DateTime.Now.Date)
+                if (productinfo != null && productinfo.BidEndDT.Value.Date >= DateTime.Now.Date)
                 {
                     _repository.UpdateBids(_ProductId, _bid);
                     return Ok();
