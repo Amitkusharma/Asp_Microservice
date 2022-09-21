@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  E-Auction:
+    image: mongo
+
+  product.api:
+    image: ${DOCKER_REGISTRY-}productapi
+    build:
+      context: .
+      dockerfile: Services\ProductService\ProductApi\Dockerfile
+
+  buyerbidservice.api:
+    image: ${DOCKER_REGISTRY-}buyerbidserviceapi
+    build:
+      context: .
+      dockerfile: Services/BuyerBidService/BuyerBidService.Api/Dockerfile
+
+volumes:
+  mongo_data:

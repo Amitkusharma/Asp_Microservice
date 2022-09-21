@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  E-Auction:
+    container_name: E-Auction
+    restart: always
+    ports:
+     - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  product.api:
+    container_name:  product.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "DatabaseSettings:ConnectionString:mongodb://E-Auction:27017"
+    depends_on:
+        - E-Auction
+    ports:
+      - "8000:80"
+  buyerbidservice.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+
