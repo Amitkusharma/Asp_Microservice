@@ -1,4 +1,6 @@
+using CommonLogging;
 using Product.API.Data;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDatacontext, DataContext>();
 builder.Services.AddScoped<IRepository, Repository>();
-
+builder.Host.UseSerilog(Serilogger.Configure)
+    .ConfigureLogging(logging => {
+        logging.ClearProviders();
+        logging.AddConsole();
+    });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -15,6 +15,14 @@ services:
     build:
       context: .
       dockerfile: Services/BuyerBidService/BuyerBidService.Api/Dockerfile
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.16.2
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+
 
 volumes:
-  mongo_data:
+  #mongo_data:
+  elasticsearch-data:

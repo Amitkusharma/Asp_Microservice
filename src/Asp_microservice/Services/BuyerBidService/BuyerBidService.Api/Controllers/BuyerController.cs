@@ -1,5 +1,8 @@
+using AutoMapper;
 using BuyerBidService.Api.Data;
+using EventBus.Messages.Event;
 using Framework.Models;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -11,10 +14,14 @@ namespace BuyerBidService.Api.Controllers
     {
         private readonly IRepository _repository;
         private readonly ILogger<BuyerController> _logger;
-        public BuyerController(IRepository repository, ILogger<BuyerController> logger)
+        private readonly IMapper _mapper;
+        private readonly IPublishEndpoint _publishevent;
+        public BuyerController(IRepository repository, ILogger<BuyerController> logger, IMapper mapper,IPublishEndpoint endpoint)
         {
             _repository = repository;
             _logger = logger;
+            _mapper = mapper;
+            _publishevent = endpoint;
 
         }
         [HttpGet]
@@ -51,6 +58,10 @@ namespace BuyerBidService.Api.Controllers
                     {
 
                         _repository.AddBids(_bid);
+                        var EventMsg = _mapper.Map<BidEvent>(_bid);
+                        EventMsg.message = "bid placed on product by :-" + _bid.FirstName + " " + _bid.LastName + "with amount" + _bid.BidAmount;
+                         _publishevent.Publish(EventMsg);
+                        
                         return Ok();
                     }
                     else
@@ -99,6 +110,35 @@ namespace BuyerBidService.Api.Controllers
             }
         }
 
-        
+
+        [HttpPost]
+        [Route("[action]")]
+        [ProducesResponseType((int)HttpStatusCode.Accepted)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> BidCheckOut([FromBody] BuyerBid buyerBid)
+        {
+            try
+            {
+                var product = await _repository.GetAllBids();
+                var bid = product.Where(x => x.Email == buyerBid.Email);
+                if (bid == null)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    await _repository.AddBids(buyerBid);
+                }
+
+                var EventMsg = _mapper.Map<BidEvent>(buyerBid);
+                await _publishevent.Publish(EventMsg);
+                return Accepted();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }
