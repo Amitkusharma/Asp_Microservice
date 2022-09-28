@@ -1,0 +1,107 @@
+{
+  "Routes": [
+
+    {
+      "DownstreamPathTemplate": "api/V1/Seller/Products",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Products",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "FileCacheOptions": { "TtlSeconds": 30 }
+    },
+    {
+      "DownstreamPathTemplate": "api/V1/Seller/Products/Add-Product",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Products",
+      "UpstreamHttpMethod": [ "POST" ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "5s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      }
+    },
+    {
+      "DownstreamPathTemplate": "api/V1/Seller/Products/DeleteProduct/{ProductId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "product.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Products/DeleteProduct/{ProductId}",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "5s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      }
+
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/v1/Buyer/Place-Bid",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "buyerbidservice.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Buyer/Place-Bid",
+      "UpstreamHttpMethod": [ "POST" ],
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "5s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Buyer/update-Bid/{ProductId}",
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "buyerbidservice.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Buyer/update-Bid/{ProductId}",
+      "UpstreamHttpMethod": [ "PUT", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Seller/Products/Show-Bids/{ProductId}",
+
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "buyerbidservice.api",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/Products/Show-Bids/{ProductId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "FileCacheOptions": { "TtlSeconds": 30 }
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5010"
+  }
+}

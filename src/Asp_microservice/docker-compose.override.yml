@@ -19,6 +19,7 @@ services:
     ports:
       - "8000:80"
   buyerbidservice.api:
+    container_name:  BuyerBidService.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - "DatabaseSettings:ConnectionString:mongodb://E-Auction:27017"
@@ -54,4 +55,16 @@ services:
       - "5672:5672"
       - "15672:15672"
 
+
+
+  apigateways:
+    container_name: apigateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+    depends_on:
+      - product.api
+      
+    ports:
+      - "8010:80"
 

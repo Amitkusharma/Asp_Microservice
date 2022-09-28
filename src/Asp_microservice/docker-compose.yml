@@ -23,6 +23,13 @@ services:
     image: rabbitmq:3-management-alpine
 
 
+  apigateways:
+    image: ${DOCKER_REGISTRY-}apigateways
+    build:
+      context: .
+      dockerfile: APIGateway/ApiGateways/Dockerfile
+
 volumes:
   #mongo_data:
   elasticsearch-data:
+
